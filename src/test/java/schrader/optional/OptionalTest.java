@@ -11,19 +11,19 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class OptionalTest {
 
     /**
-     * empty(), of(), ofNullable(), isPresent
+     * empty, of, ofNullable, isPresent
      */
 
     @Test
     public void when_optional_is_empty_then_is_present_returns_false() {
-        Optional<String> s = Optional.empty();
-        assertThat(s.isPresent()).isFalse(); // Java 11 adds 'isEmpty()'
+        Optional<String> o = Optional.empty();
+        assertThat(o.isPresent()).isFalse(); // Java 11 adds 'isEmpty()'
     }
 
     @Test
     public void when_optional_is_present_then_is_present_returns_true() {
-        Optional<String> s = Optional.of("test");
-        assertThat(s.isPresent()).isTrue();
+        Optional<String> o = Optional.of("test");
+        assertThat(o.isPresent()).isTrue();
     }
 
     @Test
@@ -33,14 +33,14 @@ public class OptionalTest {
 
     @Test
     public void when_optional_of_nullable_with_null_then_creates_empty_optional() {
-        Optional<String> s = Optional.ofNullable(null);
-        assertThat(s.isPresent()).isFalse();
+        Optional<String> o = Optional.ofNullable(null);
+        assertThat(o.isPresent()).isFalse();
     }
 
     @Test
     public void when_optional_of_nullable_with_non_null_then_creates_non_empty_optional() {
-        Optional<String> s = Optional.ofNullable("test");
-        assertThat(s.isPresent()).isTrue();
+        Optional<String> o = Optional.ofNullable("test");
+        assertThat(o.isPresent()).isTrue();
     }
 
     /**
@@ -49,29 +49,29 @@ public class OptionalTest {
 
     @Test
     public void when_optional_is_empty_then_get_throws_no_such_element_exception() {
-        Optional<String> s = Optional.empty();
-        assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(() -> s.get());
+        Optional<String> o = Optional.empty();
+        assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(() -> o.get());
     }
 
     @Test
     public void when_optional_is_empty_then_or_else_returns_default_value() {
-        Optional<String> s = Optional.empty();
-        String v = s.orElse("");
-        assertThat(v).isEmpty();
+        Optional<String> o = Optional.empty();
+        String s = o.orElse("");
+        assertThat(s).isEmpty();
     }
 
     @Test
     public void when_optional_is_empty_then_or_else_get_returns_supplied_value() {
-        Optional<String> s = Optional.empty();
-        String v = s.orElseGet(String::new);
-        assertThat(v).isEmpty(); // supplier function, lazy evaluated
+        Optional<String> o = Optional.empty();
+        String s = o.orElseGet(String::new);
+        assertThat(s).isEmpty(); // supplier function, lazy evaluated
     }
 
     @Test
     public void when_optional_is_empty_then_or_else_throws_custom_exception() {
-        Optional<String> s = Optional.empty();
+        Optional<String> o = Optional.empty();
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> s.orElseThrow(IllegalArgumentException::new));
+                .isThrownBy(() -> o.orElseThrow(IllegalArgumentException::new));
     }
 
     /**
@@ -80,8 +80,8 @@ public class OptionalTest {
 
     @Test
     public void when_optional_is_present_then_lambda_expression_is_executed() {
-        Optional<String> s = Optional.of("test");
-        s.ifPresent(v -> assertThat(v).isEqualTo("test")); // conditional action
+        Optional<String> o = Optional.of("test");
+        o.ifPresent(s -> assertThat(s).isEqualTo("test")); // conditional action
     }
 
     /**
@@ -90,16 +90,16 @@ public class OptionalTest {
 
     @Test
     public void when_predicate_is_true_then_filter_returns_optional() {
-        Optional<Integer> i = Optional.of(1);
-        Optional<Integer> i2 = i.filter(n -> n == 1);
-        assertThat(i2.isPresent()).isTrue();
+        Optional<Integer> o = Optional.of(1);
+        Optional<Integer> i = o.filter(n -> n == 1);
+        assertThat(i.isPresent()).isTrue();
     }
 
     @Test
     public void when_predicate_is_false_then_filter_returns_empty_optional() {
-        Optional<Integer> i = Optional.of(1);
-        Optional<Integer> i2 = i.filter(n -> n == 2);
-        assertThat(i2.isPresent()).isFalse();
+        Optional<Integer> o = Optional.of(1);
+        Optional<Integer> i = o.filter(n -> n == 2);
+        assertThat(i.isPresent()).isFalse();
     }
 
     /**
@@ -108,29 +108,29 @@ public class OptionalTest {
 
     @Test
     public void when_optional_is_present_then_map_returns_mapped_optional() {
-        Optional<String> s = Optional.of("test");
-        Optional<String> s2 = s.map(String::toUpperCase);
-        assertThat(s2).isEqualTo(Optional.of("TEST"));
+        Optional<String> o = Optional.of("test");
+        Optional<String> s = o.map(String::toUpperCase);
+        assertThat(s).isEqualTo(Optional.of("TEST"));
     }
 
     @Test
     public void when_optional_is_empty_then_map_returns_empty_optional() {
-        Optional<String> s = Optional.ofNullable(null);
-        Optional<String> s2 = s.map(String::toUpperCase);
-        assertThat(s2).isEqualTo(Optional.empty());
+        Optional<String> o = Optional.empty();
+        Optional<String> s = o.map(String::toUpperCase);
+        assertThat(s).isEqualTo(Optional.empty());
     }
 
     @Test
     public void when_optional_is_present_then_flatmap_returns_mapped_value() {
-        Optional<Person> person = Optional.of(new Person("Harry"));
-        String name = person.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        Optional<Person> o = Optional.of(new Person("Harry"));
+        String name = o.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
         assertThat(name).isEqualTo("Harry");
     }
 
     @Test
     public void when_optional_is_present_then_flatmap_returns_default_value() {
-        Optional<Person> person = Optional.of(new Person(null));
-        String name = person.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        Optional<Person> o = Optional.of(new Person(null));
+        String name = o.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
         assertThat(name).isEqualTo("unknown");
     }
 
@@ -139,15 +139,15 @@ public class OptionalTest {
      */
 
     @Test
-    public void stream() { // Java 9
+    public void stream() {
     }
 
     @Test
-    public void or() { // Java 9
+    public void or() {
     }
 
     @Test
-    public void ifPresentOrElse() { // requires Java 9
+    public void ifPresentOrElse() {
         String v = "any";
         /* Optional<String> value = */
         Optional.of(v);
