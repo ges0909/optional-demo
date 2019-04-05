@@ -1,10 +1,8 @@
 package schrader.optional;
 
 import org.junit.Test;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -123,14 +121,14 @@ public class OptionalTest {
     @Test
     public void when_optional_is_present_then_flatmap_returns_mapped_value() {
         Optional<Person> o = Optional.of(new Person("Harry"));
-        String name = o.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        String name = o.flatMap(Person::getName /* returns an Optional */).orElse("unknown");
         assertThat(name).isEqualTo("Harry");
     }
 
     @Test
     public void when_optional_is_present_then_flatmap_returns_default_value() {
         Optional<Person> o = Optional.of(new Person(null));
-        String name = o.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        String name = o.flatMap(Person::getName /* returns an Optional */).orElse("unknown");
         assertThat(name).isEqualTo("unknown");
     }
 
