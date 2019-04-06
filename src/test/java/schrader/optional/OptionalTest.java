@@ -123,15 +123,28 @@ public class OptionalTest {
     @Test
     public void when_optional_is_present_then_flatmap_returns_mapped_value() {
         Optional<Person> person = Optional.of(new Person("Harry"));
-        String name = person.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        String name = person.flatMap(Person::getName /* returns an Optional */).orElse("unknown");
         assertThat(name).isEqualTo("Harry");
     }
 
     @Test
     public void when_optional_is_present_then_flatmap_returns_default_value() {
         Optional<Person> person = Optional.of(new Person(null));
-        String name = person.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
+        String name = person.flatMap(Person::getName /* returns an Optional */).orElse("unknown");
         assertThat(name).isEqualTo("unknown");
+    }
+
+    /**
+     * convert empty string to empty optional
+     */
+
+    @Test
+    public void when_string_is_empty_then_filter_returns_empty_optional() {
+        String s = "";
+        // convert empty string to empty optional
+        // filter is not applied if optional is empty
+        Optional<String> o = Optional.ofNullable(s).filter(val -> !val.isEmpty());
+        assertThat(o.isPresent()).isFalse();
     }
 
     /**
