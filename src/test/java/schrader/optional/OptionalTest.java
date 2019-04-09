@@ -133,6 +133,19 @@ public class OptionalTest {
     }
 
     /**
+     * convert empty string to empty optional
+     */
+
+    @Test
+    public void when_string_is_empty_then_filter_returns_empty_optional() {
+        String s = "";
+        // convert empty string to empty optional
+        // filter is not applied if optional is empty
+        Optional<String> o = Optional.ofNullable(s).filter(val -> !val.isEmpty());
+        assertThat(o.isPresent()).isFalse();
+    }
+
+    /**
      * Java 9
      */
 
