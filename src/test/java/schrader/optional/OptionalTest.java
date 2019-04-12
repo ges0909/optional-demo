@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -27,7 +28,7 @@ public class OptionalTest {
     }
 
     @Test
-    public void when_optional_of_null_then_throws_null_pointer_exception() {
+    public void when_optional_of_with_null_then_throws_null_pointer_exception() {
         assertThatExceptionOfType(NullPointerException.class).isThrownBy(() -> Optional.of(null));
     }
 
@@ -56,15 +57,16 @@ public class OptionalTest {
     @Test
     public void when_optional_is_empty_then_or_else_returns_default_value() {
         Optional<String> o = Optional.empty();
-        String s = o.orElse("");
-        assertThat(s).isEmpty();
+        String s = o.orElse("default");
+        assertThat(s).isEqualTo("default");
     }
 
     @Test
     public void when_optional_is_empty_then_or_else_get_returns_supplied_value() {
         Optional<String> o = Optional.empty();
-        String s = o.orElseGet(String::new);
-        assertThat(s).isEmpty(); // supplier function, lazy evaluated
+        Supplier<String> supplier = () -> { return "default"; };
+        String s = o.orElseGet(supplier);
+        assertThat(s).isEqualTo("default"); // supplier function, lazy evaluated
     }
 
     @Test
@@ -91,15 +93,15 @@ public class OptionalTest {
     @Test
     public void when_predicate_is_true_then_filter_returns_optional() {
         Optional<Integer> o = Optional.of(1);
-        Optional<Integer> i = o.filter(n -> n == 1);
-        assertThat(i.isPresent()).isTrue();
+        Optional<Integer> o2 = o.filter(n -> n == 1);
+        assertThat(o2.isPresent()).isTrue();
     }
 
     @Test
     public void when_predicate_is_false_then_filter_returns_empty_optional() {
         Optional<Integer> o = Optional.of(1);
-        Optional<Integer> i = o.filter(n -> n == 2);
-        assertThat(i.isPresent()).isFalse();
+        Optional<Integer> o2 = o.filter(n -> n == 2);
+        assertThat(o2.isPresent()).isFalse();
     }
 
     /**
@@ -109,15 +111,15 @@ public class OptionalTest {
     @Test
     public void when_optional_is_present_then_map_returns_mapped_optional() {
         Optional<String> o = Optional.of("test");
-        Optional<String> s = o.map(String::toUpperCase);
-        assertThat(s).isEqualTo(Optional.of("TEST"));
+        Optional<String> o2 = o.map(String::toUpperCase);
+        assertThat(o2).isEqualTo(Optional.of("TEST"));
     }
 
     @Test
     public void when_optional_is_empty_then_map_returns_empty_optional() {
         Optional<String> o = Optional.empty();
-        Optional<String> s = o.map(String::toUpperCase);
-        assertThat(s).isEqualTo(Optional.empty());
+        Optional<String> o2 = o.map(String::toUpperCase);
+        assertThat(o2).isEqualTo(Optional.empty());
     }
 
     @Test
@@ -128,7 +130,7 @@ public class OptionalTest {
     }
 
     @Test
-    public void when_optional_is_present_then_flatmap_returns_default_value() {
+    public void when_optional_is_empty_then_flatmap_returns_default_value() {
         Optional<Person> o = Optional.of(new Person(null));
         String name = o.flatMap(Person::getName /*returns an Optional*/).orElse("unknown");
         assertThat(name).isEqualTo("unknown");
@@ -141,8 +143,7 @@ public class OptionalTest {
     @Test
     public void when_string_is_empty_then_filter_returns_empty_optional() {
         String s = "";
-        // convert empty string to empty optional
-        // filter is not applied if optional is empty
+        // convert empty string to empty optional; 'filter' returns empty optional if predicate evaluates to 'false'
         Optional<String> o = Optional.ofNullable(s).filter(val -> !val.isEmpty());
         assertThat(o.isPresent()).isFalse();
     }
