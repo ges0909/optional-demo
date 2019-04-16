@@ -1,6 +1,7 @@
 package schrader.optional;
 
 import org.junit.Test;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -17,7 +18,7 @@ public class OptionalTest {
     @Test
     public void when_optional_is_empty_then_is_present_returns_false() {
         Optional<String> o = Optional.empty();
-        assertThat(o.isPresent()).isFalse(); // Java 11 adds 'isEmpty()'
+        assertThat(o.isPresent()).isFalse();
     }
 
     @Test
@@ -63,7 +64,9 @@ public class OptionalTest {
     @Test
     public void when_optional_is_empty_then_or_else_get_returns_supplied_value() {
         Optional<String> o = Optional.empty();
-        Supplier<String> supplier = () -> { return "default"; };
+        Supplier<String> supplier = () -> {
+            return "default";
+        };
         String s = o.orElseGet(supplier);
         assertThat(s).isEqualTo("default"); // supplier function, lazy evaluated
     }
@@ -148,8 +151,32 @@ public class OptionalTest {
     }
 
     /**
-     * Java 9
+     * Java 9: ofNullable, ifPresentOrElse, stream, or
      */
+
+    @Test
+    public void when_optional_of_nullable_with_null_then_is_empty_returns_true() {
+        Optional<String> o = Optional.ofNullable(null);
+        assertThat(o.isEmpty()).isTrue();
+    }
+
+    @Test
+    public void when_optional_of_nullable_with_non_null_then_is_present_returns_true() {
+        Optional<String> o = Optional.ofNullable("any");
+        assertThat(o.isPresent()).isTrue();
+    }
+
+    @Test
+    public void when_optional_is_present_then_present_branch_is_executed() {
+        Optional<String> o = Optional.of("any");
+        o.ifPresentOrElse(s -> assertThat(s).isEqualTo("any"), () -> assertThat(true).isFalse());
+    }
+
+    @Test
+    public void when_optional_is_present_then_else_branch_is_executed() {
+        Optional<String> o = Optional.ofNullable(null);
+        o.ifPresentOrElse(s -> assertThat(s).isEqualTo("any"), () -> assertThat(true).isTrue());
+    }
 
     @Test
     public void stream() {
@@ -159,13 +186,14 @@ public class OptionalTest {
     public void or() {
     }
 
+    /**
+     * Java 11:  isEmpty()
+     */
+
     @Test
-    public void ifPresentOrElse() {
-        String v = "any";
-        /* Optional<String> value = */
-        Optional.of(v);
-        // value.ifPresentOrElse(s -> System.out.println("found: " + s), () ->
-        // System.out.println("not found"));
+    public void when_optional_is_empty_then_is_empty_returns_true() {
+        Optional<String> o = Optional.empty();
+        assertThat(o.isEmpty()).isTrue();
     }
 
     class Person {
