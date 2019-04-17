@@ -2,6 +2,8 @@ package schrader.optional;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -180,6 +182,16 @@ public class OptionalTest {
 
     @Test
     public void stream() {
+        List<Optional<String>> l = Arrays.asList(
+                Optional.ofNullable("one"),
+                Optional.empty(),
+                Optional.of("two"),
+                Optional.ofNullable(null),
+                Optional.of("three"));
+        String[] a = l.stream()
+                .flatMap(Optional::stream)
+                .toArray(String[]::new);
+        assertThat(a).isEqualTo(new String[]{"one", "two", "three"});
     }
 
     @Test
