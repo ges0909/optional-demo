@@ -2,7 +2,6 @@ package schrader.optional;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -77,7 +76,7 @@ public class OptionalTest {
     public void when_optional_is_empty_then_or_else_throws_custom_exception() {
         Optional<String> o = Optional.empty();
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> o.orElseThrow(IllegalArgumentException::new));
+            .isThrownBy(() -> o.orElseThrow(IllegalArgumentException::new));
     }
 
     /**
@@ -182,20 +181,25 @@ public class OptionalTest {
 
     @Test
     public void stream() {
-        List<Optional<String>> l = Arrays.asList(
-                Optional.ofNullable("one"),
-                Optional.empty(),
-                Optional.of("two"),
-                Optional.ofNullable(null),
-                Optional.of("three"));
+        List<Optional<String>> l = List.of(
+            Optional.ofNullable("one"),
+            Optional.empty(),
+            Optional.of("two"),
+            Optional.ofNullable(null),
+            Optional.of("three"));
         String[] a = l.stream()
-                .flatMap(Optional::stream)
-                .toArray(String[]::new);
+            .flatMap(Optional::stream) // converts optional to stream
+            .toArray(String[]::new);
         assertThat(a).isEqualTo(new String[]{"one", "two", "three"});
     }
 
     @Test
     public void or() {
+        var o1 = Optional.empty();
+        var o2 = Optional.ofNullable(null);
+        var o3 = Optional.of("any");
+        var o = o1.or(() -> o2.or(() -> o3));
+        assertThat(o).isEqualTo(o3);
     }
 
     /**
