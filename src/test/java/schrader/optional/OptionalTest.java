@@ -190,7 +190,7 @@ class OptionalTest {
         String[] a = l.stream()
                 .flatMap(Optional::stream) // converts optional to stream
                 .toArray(String[]::new);
-        assertThat(a).isEqualTo(new String[]{"one", "two", "three"});
+        assertThat(a).containsExactly("one", "two", "three");
     }
 
     @Test
