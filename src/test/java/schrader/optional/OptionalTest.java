@@ -212,7 +212,7 @@ class OptionalTest {
         assertThat(o.isEmpty()).isTrue();
     }
 
-    class Person {
+    static class Person {
         private String name;
 
         Person(String name) {
